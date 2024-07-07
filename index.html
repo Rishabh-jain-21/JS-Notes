@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Notes</title>
+    <script src="index1.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #333;
+        }
+
+        .note-section {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .code-block {
+            background-color: #282c34;
+            color: #61dafb;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        .highlight {
+            color: #e91e63;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background-color: #f2f2f2;
+        }
+
+        .comparison-table td:nth-child(2) {
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>JavaScript Notes</h1>
+    <div class="note-section">
+        <h2>Variable Declarations: var, let, and const</h2>
+        <p><strong>var, let, and const</strong> are the JavaScript datatypes which can be used to initialize variables.
+            However, JavaScript is a loosely typed language, so <strong>let</strong>, <strong>const</strong>, and
+            <strong>var</strong> have no direct relation with data types like integer, string, etc.
+        </p>
+        <h3>Declaration</h3>
+        <div class="code-block">
+            var a;<br>
+            var a;<br><br>
+            let b;<br>
+            let b;<br><br>
+            const c;<br>
+            const c;
+        </div>
+        <p><strong>Summary:</strong></p>
+        <ul>
+            <li><strong>var</strong> can be redeclared multiple times inside the same scope, but this is not applicable
+                for <strong>let</strong> and <strong>const</strong>.</li>
+            <li>It is necessary to initialize some value while using <strong>const</strong>, but this is not applicable
+                for <strong>var</strong> and <strong>let</strong>.</li>
+        </ul>
+    </div>
+    <div class="note-section">
+        <h2>Scope</h2>
+        <p>Scope is the area/chunk of code in which the following variables and functions are accessible.</p>
+        <h3>Global Scope</h3>
+        <p>Variables declared as <strong>var</strong> are known as global scope and are accessible throughout the
+            complete file.</p>
+        <h3>Function Scope</h3>
+        <p>Variables declared with <strong>var</strong>, <strong>let</strong>, and <strong>const</strong> are only
+            accessible inside the function.</p>
+        <div class="code-block">
+            function x() {<br>
+            &nbsp;&nbsp;let a = 15;<br>
+            &nbsp;&nbsp;var b = 16;<br>
+            &nbsp;&nbsp;console.log("my age is", a, b);<br>
+            }<br>
+            x();<br><br>
+            console.log("my age is", b); <span class="highlight">// will throw a ReferenceError</span>
+        </div>
+        <h3>Block Scope</h3>
+        <p>Similar to function scope, but variables declared with <strong>var</strong> are accessible outside the block
+            because <strong>var</strong> is global scope.</p>
+        <div class="code-block">
+            {<br>
+            &nbsp;&nbsp;let a = 15;<br>
+            &nbsp;&nbsp;var b = 16;<br>
+            &nbsp;&nbsp;console.log("my age is", a, b);<br>
+            }<br><br>
+            console.log("my age is", a, b); <span class="highlight">// will throw a ReferenceError</span>
+        </div>
+    </div>
+    <div class="note-section">
+        <h2>Shadowing</h2>
+        <p>When a variable declared outside the block scope and inside the block scope have the same name, and the
+            variable declared outside the scope contains the same value as the variable inside the scope, this is called
+            shadowing.</p>
+        <div class="code-block">
+            var a = 100;<br>
+            {<br>
+            &nbsp;&nbsp;var a = 10;<br>
+            &nbsp;&nbsp;let b = 11;<br>
+            &nbsp;&nbsp;const c = 12;<br>
+            }<br><br>
+            console.log(a); <span class="highlight">// 10</span>
+        </div>
+        <p>In this example, the value of <strong>a</strong> will be updated to 10 because <strong>var</strong> refers to
+            the memory location updated in the block scope.</p>
+        <div class="code-block">
+            let b = 100;<br>
+            {<br>
+            &nbsp;&nbsp;var a = 10;<br>
+            &nbsp;&nbsp;let b = 300;<br>
+            &nbsp;&nbsp;const c = 30;<br>
+            &nbsp;&nbsp;console.log("b1", b);<br>
+            }<br><br>
+            console.log("b2", b); <span class="highlight">// 100</span>
+        </div>
+        <p>In this example, the outputs will be 300 and 100 because <strong>let</strong> and <strong>const</strong> are
+            block scoped.</p>
+    </div>
+    <div class="note-section">
+        <h2>Illegal Shadowing</h2>
+        <p>You cannot shadow <strong>var</strong> with <strong>let</strong>, but the opposite way is correct.</p>
+        <div class="code-block">
+            let a = 10;<br>
+            {<br>
+            &nbsp;&nbsp;var a = 100;<br>
+            &nbsp;&nbsp;console.log(a);<br>
+            }<br><br>
+            console.log(a); <span class="highlight">// SyntaxError: Identifier 'a' has already been declared</span>
+        </div>
+    </div>
+    <div class="note-section">
+        <h2>Hoisting</h2>
+        <p>Hoisting is a phenomenon where you can use variables and functions even before declaring them.</p>
+        <h3>How?</h3>
+        <p>This can be explained by understanding how JavaScript works. JavaScript goes through two phases: the
+            initialization phase and the execution phase. Before executing, JavaScript initializes variables in the
+            initialization phase. This is why hoisting is possible.</p>
+        <div class="code-block">
+            console.log(h); <span class="highlight">// output will be undefined</span><br>
+            var h = 10;<br><br>
+            console.log(k); <span class="highlight">// ReferenceError: Cannot access 'k' before
+                initialization</span><br>
+            let k = 10;<br><br>
+            console.log(z); <span class="highlight">// ReferenceError: Cannot access 'z' before
+                initialization</span><br>
+            let z = 10;
+        </div>
+        <p><strong>Summary:</strong></p>
+        <ul>
+            <li>Hoisting is a phenomenon in which you can use variables even before declaring them.</li>
+            <li><strong>var</strong> is hoisted, but <strong>let</strong> and <strong>const</strong> are not.</li>
+        </ul>
+        <p>Note: <strong>let</strong> and <strong>const</strong> are hoisted in the temporal dead zone.</p>
+    </div>
+    <div class="note-section">
+        <h2>Map, Filter, and Reduce</h2>
+        <h3>What is <code>map()</code>?</h3>
+        <p>The <code>map()</code> method takes a callback function as an input and creates a new array by calling this
+            function for every array element.</p>
+        <ul>
+            <li><code>map()</code> does not execute the function for empty elements.</li>
+            <li><code>map()</code> does not change the original array.</li>
+        </ul>
+        <p>Important: The callback function takes three inputs: the element, the index, and the array itself.</p>
+        <div class="code-block">
+            const arr = [1, 2, 3, 4];<br>
+            const emptyArray = [];<br><br>
+            emptyArray.map((elm) => {<br>
+            &nbsp;&nbsp;console.log("empty", elm); <span class="highlight">// No output</span><br>
+            });<br><br>
+            arr.map((elm, index, arr) => {<br>
+            &nbsp;&nbsp;console.log(elm, index, arr); <span class="highlight">// Output: 1 0 [1, 2, 3, 4], 2 1 [1, 2, 3,
+                4], ...</span><br>
+            });<br><br>
+            const multiple = arr.map((elm) => {<br>
+            &nbsp;&nbsp;return elm * 3;<br>
+            });<br>
+            console.log("multiple", multiple); <span class="highlight">// Output: [3, 6, 9, 12]</span>
+        </div>
+
+        <h3>What is <code>filter()</code>?</h3>
+        <p>The <code>filter()</code> method creates a new array filled with elements that pass a test provided by a
+            function.</p>
+        <ul>
+            <li><code>filter()</code> does not execute the function for empty elements.</li>
+            <li><code>filter()</code> does not change the original array.</li>
+        </ul>
+        <p>Important: The callback function takes three inputs: the element, the index, and the array itself.</p>
+        <div class="code-block">
+            const arrr = [1, 2, 3, 4];<br><br>
+            const filterOutput = arrr.filter((elm) => elm > 2);<br>
+            console.log(filterOutput); <span class="highlight">// Output: [3, 4]</span>
+        </div>
+
+        <h3>What is <code>reduce()</code>?</h3>
+        <p>The <code>reduce()</code> method reduces all the inputs into one value by executing a reducer function for
+            each array element.</p>
+        <ul>
+            <li>The <code>reduce()</code> method returns a single value: the function's accumulated result.</li>
+            <li>The <code>reduce()</code> method does not execute the function for empty array elements.</li>
+            <li>The <code>reduce()</code> method does not change the original array.</li>
+        </ul>
+        <p>Important: The <code>reduce()</code> method takes two inputs: a callback function and an initial value. The
+            callback function takes four inputs: the accumulator (previous value), the current value, the index, and the
+            array itself.</p>
+        <div class="code-block">
+            const newArr = [1, 2, 3, 4, 5];<br><br>
+            const sumOutput = newArr.reduce((acc, curr, index, arr) => {<br>
+            &nbsp;&nbsp;return acc + curr;<br>
+            }, 0);<br><br>
+            console.log(sumOutput); <span class="highlight">// Output: 15</span>
+        </div>
+    </div>
+    <div class="note-section">
+        <h2>Polyfills for Map, Filter, and Reduce</h2>
+
+        <h3>What is a Polyfill?</h3>
+        <p>A polyfill is a method for creating these functions by ourselves.</p>
+
+        <h3>Polyfill for <code>map()</code></h3>
+        <p>Steps to create a polyfill for <code>map()</code>:</p>
+        <ol>
+            <li><strong>Prototype Keyword:</strong> All JavaScript objects inherit properties and methods from a
+                prototype.</li>
+            <li><strong>Callback Function:</strong> The callback function processes each element of the array and
+                returns the result.</li>
+            <li><strong>This Keyword:</strong> The <code>this</code> keyword refers to the array on which the
+                <code>myMap</code> method is called.
+            </li>
+        </ol>
+        <div class="code-block">
+            Array.prototype.myMap = function (cb) {<br>
+            &nbsp;&nbsp;let temp = [];<br>
+            &nbsp;&nbsp;for (let i = 0; i < this.length; i++) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;temp.push(cb(this[i], i, this));<br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;return temp;<br>
+                }<br><br>
+
+                const arr = [1, 2, 3, 4, 5];<br>
+                const newArray = arr.myMap((elm, index, arr) => {<br>
+                &nbsp;&nbsp;return elm * 3;<br>
+                });<br><br>
+                console.log("NA", newArray); <span class="highlight">// Output: [3, 6, 9, 12, 15]</span>
+        </div>
+
+        <h3>Polyfill for <code>filter()</code></h3>
+        <p>Steps to create a polyfill for <code>filter()</code>:</p>
+        <ol>
+            <li><strong>Prototype Keyword:</strong> All JavaScript objects inherit properties and methods from a
+                prototype.</li>
+            <li><strong>Callback Function:</strong> The callback function tests each element of the array and returns
+                <code>true</code> for elements to keep.
+            </li>
+            <li><strong>This Keyword:</strong> The <code>this</code> keyword refers to the array on which the
+                <code>myFilter</code> method is called.
+            </li>
+        </ol>
+        <div class="code-block">
+            Array.prototype.myFilter = function (cb) {<br>
+            &nbsp;&nbsp;const temp = [];<br>
+            &nbsp;&nbsp;for (let i = 0; i < this.length; i++) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;if (cb(this[i], i, this)) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp.push(this[i]);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;return temp;<br>
+                }<br><br>
+
+                const arr1 = [1, 2, 3, 4, 5];<br>
+                const filterArray = arr1.myFilter((elm, index, arr) => elm > 3);<br>
+                console.log("FA", filterArray); <span class="highlight">// Output: [4, 5]</span>
+        </div>
+
+        <h3>Polyfill for <code>reduce()</code></h3>
+        <p>Steps to create a polyfill for <code>reduce()</code>:</p>
+        <ol>
+            <li><strong>Prototype Keyword:</strong> All JavaScript objects inherit properties and methods from a
+                prototype.</li>
+            <li><strong>Callback Function:</strong> The callback function processes each element of the array and
+                accumulates the result.</li>
+            <li><strong>This Keyword:</strong> The <code>this</code> keyword refers to the array on which the
+                <code>myReduce</code> method is called.
+            </li>
+            <li><strong>Accumulator:</strong> The accumulator stores the accumulated result.</li>
+        </ol>
+        <div class="code-block">
+            Array.prototype.myReduce = function (cb, initialValue) {<br>
+            &nbsp;&nbsp;var accumulator = initialValue;<br>
+            &nbsp;&nbsp;for (let i = 0; i < this.length; i++) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;accumulator = accumulator ? cb(accumulator, this[i], i, this) : this[i];<br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;return accumulator;<br>
+                }<br><br>
+
+                const arr2 = [1, 2, 3, 4, 5];<br>
+                const reducedArray = arr2.myReduce(function (acc, elm, index, arr) {<br>
+                &nbsp;&nbsp;return acc + elm;<br>
+                }, 0);<br><br>
+                console.log("RA", reducedArray); <span class="highlight">// Output: 15</span>
+        </div>
+    </div>
+    <div class="note-section">
+        <h2>Map() vs forEach()</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Map()</th>
+                <th>|</th>
+                <th>forEach()</th>
+            </tr>
+            <tr>
+                <td>Map does not update the original array</td>
+                <td>|</td>
+                <td>forEach updates the original array</td>
+            </tr>
+            <tr>
+                <td>Map supports function chaining</td>
+                <td>|</td>
+                <td>forEach does not support function chaining</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="code-block">
+                        const numbers = [1, 2, 3];<br>
+                        const doubled = numbers.map(n => n * 2);<br>
+                        console.log(doubled); <span class="highlight">// [2, 4, 6]</span><br>
+                        console.log(numbers); <span class="highlight">// [1, 2, 3]</span>
+                    </div>
+                </td>
+                <td>|</td>
+                <td>
+                    <div class="code-block">
+                        const numbers = [1, 2, 3];<br>
+                        numbers.forEach((n, i, arr) => arr[i] = n * 2);<br>
+                        console.log(numbers); <span class="highlight">// [2, 4, 6]</span>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+
+        <h3>Example using <code>map</code> and <code>filter</code> chaining</h3>
+        <div class="code-block">
+            const people = [<br>
+            &nbsp;&nbsp;{ name: "John", surname: "Doe", age: 25 },<br>
+            &nbsp;&nbsp;{ name: "Jane", surname: "Smith", age: 35 },<br>
+            &nbsp;&nbsp;{ name: "Emily", surname: "Jones", age: 40 }<br>
+            ];<br><br>
+
+            const result = people<br>
+            &nbsp;&nbsp;.filter(person => person.age > 30)<br>
+            &nbsp;&nbsp;.map(person => ({ name: person.name, surname: person.surname }));<br><br>
+
+            console.log(result); <span class="highlight">// Output: [ { name: "Jane", surname: "Smith" }, { name:
+                "Emily", surname: "Jones" } ]</span>
+        </div>
+    </div>
+    <div class="note-section">
+        <h2>Function Declarations and Expressions</h2>
+        <h3>Function Declaration</h3>
+        <div class="code-block">
+            function square(num) {<br>
+            &nbsp;&nbsp;return num * num;<br>
+            }<br><br>
+
+            console.log(square(3)); <span class="highlight">// Output: 9</span>
+        </div>
+
+        <h3>Anonymous Function and Function Expression</h3>
+        <p>Anonymous function is a function without any name, which will give an error if called directly.</p>
+        Example of anonymous function which gives error
+        <div class="code-block">
+            function() {<br>
+            &nbsp;&nbsp;console.log("hello");<br>
+            }<br>
+            ();
+        </div>
+        <p>Function expression uses an anonymous function:</p>
+        <div class="code-block">
+            const myFunction = function (num) {<br>
+            &nbsp;&nbsp;console.log("number is", num);<br>
+            }<br><br>
+
+            myFunction(3); <span class="highlight">// Output: number is 3</span>
+        </div>
+
+        <h3>First-Class Functions</h3>
+        <p>Functions that take another function as an argument or return a function are called first-class functions.
+        </p>
+        <div class="code-block">
+            function area(num) {<br>
+            &nbsp;&nbsp;return Math.PI * num * num;<br>
+            }<br><br>
+
+            function perimeter(num) {<br>
+            &nbsp;&nbsp;return 2 * Math.PI * num;<br>
+            }<br><br>
+
+            function calculate(fxn) {<br>
+            &nbsp;&nbsp;console.log(fxn(3));<br>
+            }<br><br>
+
+            calculate(area); <span class="highlight">// Output: 28.274333882308138</span><br>
+            calculate(perimeter); <span class="highlight">// Output: 18.84955592153876</span>
+        </div>
+
+        <h3>IIFE (Immediately Invoked Function Expression)</h3>
+        <p>IIFE is a function that is called immediately after it is defined.</p>
+        <div class="code-block">
+            (function (x) {<br>
+            &nbsp;&nbsp;return (function (y) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.log(x); <span class="highlight">// Output: 1</span><br>
+            })(2);<br>
+            })(1);
+        </div>
+
+        <h3>Function Scope</h3>
+        <p>Example of function scope:</p>
+        <div class="code-block">
+            function run() {<br>
+            &nbsp;&nbsp;for (var i = 0; i < 5; i++) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;setTimeout(() => {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(i); <span class="highlight">// Output: 5 5 5 5 5</span>
+                (after 1 second each)</br>
+                }, 1000);<br>
+                }<br>
+                }<br>
+                run();
+        </div>
+        <div class="code-block">
+            function run() {<br>
+            &nbsp;&nbsp;for (let i = 0; i < 5; i++) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;setTimeout(() => {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(i); <span class="highlight">// Output: 0 1 2 3 4</span>
+                (after 1 second each)</br>
+                }, 1000);<br>
+                }<br>
+                }<br>
+                run();
+        </div>
+
+        <h3>Hoisting</h3>
+        <p>Example of hoisting with function declaration and function expression:</p>
+        <div class="code-block">
+            // Function declaration<br>
+            console.log(hoistedFunction()); <span class="highlight">// Output: Hoisted</span><br>
+            function hoistedFunction() {<br>
+            &nbsp;&nbsp;return "Hoisted";<br>
+            }<br><br>
+            // Function expression<br>
+            console.log(notHoistedFunction()); <span class="highlight">// Output: TypeError: notHoistedFunction is not a
+                function</span><br>
+            var notHoistedFunction = function() {<br>
+            &nbsp;&nbsp;return "Not hoisted";<br>
+            };
+        </div>
+        <h2>Interview Question on Hoisting</h2>
+        <h3>Explanation of the Code</h3>
+        <p>The following code demonstrates JavaScript's hoisting behavior:</p>
+        <div class="code-block">
+            var x = 10;<br>
+            function a() {<br>
+            &nbsp;&nbsp;console.log(x); <span class="highlight">// Output: undefined</span><br>
+            var x = 20;<br>
+            }<br>
+            a();
+        </div>
+        <p>Explanation:</p>
+        <ul>
+            <li>When the function <code>a</code> is called, the JavaScript engine hoists the variable declaration
+                <code>var x</code> to the top of the function scope.
+            </li>
+            <li>This means that the variable <code>x</code> inside the function is undefined at the point where
+                <code>console.log(x)</code> is called, because the declaration <code>var x</code> shadows the global
+                variable <code>x</code>.
+            </li>
+            <li>Therefore, the output is <code>undefined</code>.</li>
+        </ul>
+    </div>
+    <div class="note-section">
+        <h2>Spread and Rest Operators</h2>
+        <h3>Definition and Examples</h3>
+        <p>The spread operator (<code>...</code>) allows an iterable such as an array or string to be expanded in places
+            where zero or more arguments (for function calls) or elements (for array literals) are expected. It is also
+            useful for shallow copying or merging arrays.</p>
+        <div class="code-block">
+            const arr1 = [1, 2, 3];<br>
+            const arr2 = [...arr1, 4, 5, 6];<br>
+            console.log(arr2); <span class="highlight">// Output: [1, 2, 3, 4, 5, 6]</span>
+        </div>
+
+        <p>The rest operator (<code>...</code>) allows us to represent an indefinite number of arguments as an array. It
+            is often used in function parameters to handle multiple arguments.</p>
+        <div class="code-block">
+            function sum(...numbers) {<br>
+            &nbsp;&nbsp;return numbers.reduce((acc, curr) => acc + curr, 0);<br>
+            }<br>
+            console.log(sum(1, 2, 3, 4)); <span class="highlight">// Output: 10</span>
+        </div>
+
+        <h3>Interview Question</h3>
+        <p>Explanation of the following code:</p>
+        <div class="code-block">
+            const fn = (a, x, y, ...numbers) => {<br>
+            &nbsp;&nbsp;console.log(x, y, numbers);<br>
+            }<br><br>
+            fn(5, 6, 7, 8, 9, 10); <span class="highlight">// Output: 6 7 [8, 9, 10]</span>
+        </div>
+        <p>Explanation:</p>
+        <ul>
+            <li>The function <code>fn</code> is called with the arguments <code>5, 6, 7, 8, 9, 10</code>.</li>
+            <li>The parameters <code>a</code>, <code>x</code>, and <code>y</code> are assigned the values
+                <code>5</code>, <code>6</code>, and <code>7</code>, respectively.
+            </li>
+            <li>The rest operator collects the remaining arguments (<code>8, 9, 10</code>) into the array
+                <code>numbers</code>.
+            </li>
+            <li>Therefore, the output is <code>6 7 [8, 9, 10]</code>.</li>
+        </ul>
+    </div>
+    <div class="note-section">
+        <h2>Arrow Functions vs Normal Functions</h2>
+        <h3>Explanation and Differences</h3>
+
+        <table>
+            <tr>
+                <th>Arrow Function</th>
+                <th>|</th>
+                <th>Normal Function</th>
+            </tr>
+            <tr>
+                <td>
+                    <h4>Syntax</h4>
+                    <div class="code-block">
+                        const add = (a, b) => a + b;<br>
+                        console.log(add(2, 3)); <span class="highlight">// Output: 5</span>
+                    </div>
+                </td>
+                <td>|</td>
+                <td>
+                    <h4>Syntax</h4>
+                    <div class="code-block">
+                        function add(a, b) {<br>
+                        &nbsp;&nbsp;return a + b;<br>
+                        }<br>
+                        console.log(add(2, 3)); <span class="highlight">// Output: 5</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4>Implicit Return</h4>
+                    <div class="code-block">
+                        const square = n => n * n;<br>
+                        console.log(square(4)); <span class="highlight">// Output: 16</span>
+                    </div>
+                </td>
+                <td>|</td>
+                <td>
+                    <h4>Implicit Return</h4>
+                    <div class="code-block">
+                        function square(n) {<br>
+                        &nbsp;&nbsp;return n * n;<br>
+                        }<br>
+                        console.log(square(4)); <span class="highlight">// Output: 16</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4><code>arguments</code> Keyword</h4>
+                    <p>Arrow functions do not have their own <code>arguments</code> object.</p>
+                    <div class="code-block">
+                        const showArgs = () => {<br>
+                        &nbsp;&nbsp;console.log(arguments); <br>
+                        }<br>
+                        // showArgs(1, 2, 3); <span class="highlight">// Error</span>
+                    </div>
+                </td>
+                <td>|</td>
+                <td>
+                    <h4><code>arguments</code> Keyword</h4>
+                    <p>Normal functions have their own <code>arguments</code> object.</p>
+                    <div class="code-block">
+                        function showArgs() {<br>
+                        &nbsp;&nbsp;console.log(arguments);<br>
+                        }<br>
+                        showArgs(1, 2, 3); <span class="highlight">// Output: [1, 2, 3]</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4><code>this</code> Keyword</h4>
+                    <p>Arrow functions do not have their own <code>this</code> context; they inherit it from the parent
+                        scope.</p>
+                    <div class="code-block">
+                        const obj = {<br>
+                        &nbsp;&nbsp;value: 10,<br>
+                        &nbsp;&nbsp;method: function() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;setTimeout(() => {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(this.value); <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}, 1000);<br>
+                        &nbsp;&nbsp;}<br>
+                        };<br>
+                        obj.method(); <span class="highlight">// Output: 10</span>
+                    </div>
+                </td>
+                <td>|</td>
+                <td>
+                    <h4><code>this</code> Keyword</h4>
+                    <p>Normal functions have their own <code>this</code> context.</p>
+                    <div class="code-block">
+                        const obj = {<br>
+                        &nbsp;&nbsp;value: 10,<br>
+                        &nbsp;&nbsp;method: function() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;setTimeout(function() {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(this.value); <br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}, 1000);<br>
+                        &nbsp;&nbsp;}<br>
+                        };<br>
+                        obj.method(); <span class="highlight">// Output: undefined</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="note-section">
+        <h2>Closure in JavaScript</h2>
+        <p>In JavaScript, a closure is a function bundled with its lexical environment. A closure is created every time
+            a function is created.</p>
+        <h3>Scopes in JavaScript</h3>
+        <ul>
+            <li><strong>Global Scope:</strong> Variables declared outside any function, accessible throughout the
+                program.</li>
+            <li><strong>Local Scope:</strong> Variables declared within a function, accessible only within that
+                function.</li>
+            <li><strong>Lexical Scope:</strong> A variable defined outside the function can be accessible inside the
+                function after variable declaration, but the reverse is not true.</li>
+        </ul>
+
+        <h3>Lexical Environment and Closure Example</h3>
+        <div class="code-block">
+            function outer() {<br>
+            &nbsp;&nbsp;let outerVar = 'I am outside!';<br>
+            &nbsp;&nbsp;function inner() {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;let innerVar = 'I am inside!';<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.log(outerVar); <span class="highlight">// 'I am outside!'</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.log(innerVar); <span class="highlight">// 'I am inside!'</span><br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;inner();<br>
+            }<br>
+            outer();<br>
+        </div>
+
+        <h3>Closure Scope Chaining Example</h3>
+        <div class="code-block">
+            const globalVar = 'I am global';<br><br>
+            function outerFunction(outerArg) {<br>
+            &nbsp;&nbsp;const outerVar = 'I am outer';<br>
+            &nbsp;&nbsp;return function middleFunction(middleArg) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;const middleVar = 'I am middle';<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;return function innerFunction(innerArg) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const innerVar = 'I am inner';<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(globalVar); <span class="highlight">// 'I am
+                global'</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(outerVar); <span class="highlight">// 'I am
+                outer'</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(middleVar); <span class="highlight">// 'I am
+                middle'</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(innerVar); <span class="highlight">// 'I am
+                inner'</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(outerArg, middleArg, innerArg);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;}<br>
+            }<br><br>
+            outerFunction(1)(2)(3);<br>
+        </div>
+
+        <h3>Output of the Following Code</h3>
+        <div class="code-block">
+            let count = 0;<br>
+            (function printCount() {<br>
+            &nbsp;&nbsp;if (count == 0) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;let count = 1; <span class="highlight">// here we are using shadowing</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.log(count); <span class="highlight">// Output: 1</span><br>
+            &nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;console.log(count); <span class="highlight">// Output: 0</span><br>
+            })();<br>
+        </div>
+
+        <h3>Create a Function to Add Two Numbers</h3>
+        <div class="code-block">
+            var addSix = createBase(6);<br>
+            addSix(10); <span class="highlight">// Output: 16</span><br>
+            addSix(15); <span class="highlight">// Output: 21</span><br><br>
+            function createBase(num) {<br>
+            &nbsp;&nbsp;return function (innerNum) { // anonymous function<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.log(innerNum + num);<br>
+            &nbsp;&nbsp;}<br>
+            }<br>
+        </div>
+
+        <h3>Optimize the Following Code</h3>
+        <div class="code-block">
+            function find() {<br>
+            &nbsp;&nbsp;let a = [];<br>
+            &nbsp;&nbsp;for (let i = 0; i < 1000000; i++) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;a[i] = i * 1;<br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;return function (index) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;console.log(a[index]);<br>
+                &nbsp;&nbsp;}<br>
+                }<br><br>
+                const closure = find();<br>
+                console.time("6");<br>
+                closure(6); <span class="highlight">// Output: 6</span><br>
+                console.timeEnd("6");<br>
+                console.time("50");<br>
+                closure(50); <span class="highlight">// Output: 50</span><br>
+                console.timeEnd("50");<br>
+        </div>
+
+        <h3>Output of the Following Code (0, 1, 2)</h3>
+        <div class="code-block">
+            for (var i = 0; i < 3; i++) {<br>
+                &nbsp;&nbsp;function closures(i) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;setTimeout(() => {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(i); <span class="highlight">// Outputs: 0, 1,
+                    2</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;}, i * 1000);<br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;closures(i);<br>
+                }<br>
+        </div>
+
+        <h3>Module Pattern Example</h3>
+        <div class="code-block">
+            var Module = (<br>
+            &nbsp;&nbsp;function () {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;function privateMethod() {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log("private");<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;return (<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;function publicMethod() {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log("public");<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;)<br>
+            &nbsp;&nbsp;}<br>
+            )();<br><br>
+            Module.publicMethod(); <span class="highlight">// Output: 'public'</span><br>
+            // Module.privateMethod(); <span class="highlight">// Error: privateMethod is not defined</span><br>
+        </div>
+    </div>
+
+    <div class="note-section">
+        <h2>Function Currying in JavaScript</h2>
+        <p>Currying is a technique in functional programming that transforms a function with multiple arguments into
+            several functions of a single argument in sequence.</p>
+        <p><strong>Why should we use currying?</strong></p>
+        <p>Currying helps in creating higher-order functions and makes function composition easier and more flexible. It
+            also allows for partial application of a function's arguments.</p>
+
+        <h3>Function Transition</h3>
+        <div class="code-block">
+            // Function with multiple arguments<br>
+            function simpleFunction(param1, param2, param3, ...) <br>
+            // Curried function<br>
+            function curriedFunction(param1)(param2)(param3)(...)<br>
+        </div>
+
+        <h3>Example of a Curried Function</h3>
+        <div class="code-block">
+            function a(x) {<br>
+            &nbsp;&nbsp;return function (y) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;return `${x} ${y}`;<br>
+            &nbsp;&nbsp;}<br>
+            }<br><br>
+            console.log(a(5)(7)); <span class="highlight">// Output: '5 7'</span><br>
+        </div>
+
+        <h3>Sum of Three Numbers: Normal vs. Curried Functions</h3>
+        <h2>Normal Functions vs Function Currying</h2>
+        <h3>Explanation and Differences</h3>
+
+        <table class="comparison-table">
+            <tr>
+                <th>Normal Function</th>
+                <th>|</th>
+                <th>Function Currying</th>
+            </tr>
+            <tr>
+                <td>
+                    <h4>Example</h4>
+                    <div class="code-block">
+                        function sumNormal(a, b, c) {<br>
+                        &nbsp;&nbsp;return a + b + c;<br>
+                        }<br><br>
+                        console.log("normal sum", sumNormal(1, 2, 3)); <span class="highlight">// normal sum 6</span>
+                    </div>
+                </td>
+                <td>|</td>
+                <td>
+                    <h4>Example</h4>
+                    <div class="code-block">
+                        function sumCurr(a) {<br>
+                        &nbsp;&nbsp;return function (b) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return function (c) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a + b + c;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;}<br>
+                        }<br><br>
+                        console.log("currying sum", sumCurr(1)(2)(3)); <span class="highlight">// currying sum 6</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <h3>Function Evaluation Example</h3>
+        <div class="code-block">
+            function evaluate(logic) {<br>
+            &nbsp;&nbsp;return function (a) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;return function (b) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch (logic) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case "sum": return a + b;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case "subtract": return a - b;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case "divide": return a / b;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case "multiply": return a * b;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default: return "not defined";<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;}<br>
+            }<br><br>
+            console.log(evaluate("divide")(4)(2)); <span class="highlight">// Output: 2</span><br>
+        </div>
+
+        <h3>Infinite Currying Example</h3>
+        <div class="code-block">
+            function addInfinite(a) {<br>
+            &nbsp;&nbsp;return function (b) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;if (b) return addInfinite(a + b);<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;else return a;<br>
+            &nbsp;&nbsp;}<br>
+            }<br><br>
+            // Explanation: This function returns another function until no argument is passed. <br>
+            // It sums all the arguments passed in sequence.<br><br>
+            console.log(addInfinite(1)(2)(3)(4)(5)(6)()); <span class="highlight">// Output: 21</span><br>
+            console.log(addInfinite(1)(2)(3)(4)()); <span class="highlight">// Output: 10</span><br>
+        </div>
+
+        <h2>Currying vs Partial Application</h2>
+        <h3>Explanation and Differences</h3>
+
+        <table class="comparison-table">
+            <tr>
+                <th>Currying</th>
+                <th>|</th>
+                <th>Partial Application</th>
+            </tr>
+            <tr>
+                <td>
+                    <h4>Definition</h4>
+                    <p>Currying is a technique that transforms a function with multiple arguments into a sequence of
+                        functions, each taking a single argument.</p>
+                </td>
+                <td>|</td>
+                <td>
+                    <h4>Definition</h4>
+                    <p>Partial application is a technique that transforms a function into another function with smaller
+                        arity (number of arguments).</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4>Example</h4>
+                    <div class="code-block">
+                        // Currying example<br>
+                        function multiply(a) {<br>
+                        &nbsp;&nbsp;return function(b) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;return function(c) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return a * b * c;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;}<br>
+                        }<br>
+                        console.log(multiply(2)(3)(4)); <span class="highlight">// Output: 24</span>
+                    </div>
+                </td>
+                <td>|</td>
+                <td>
+                    <h4>Example</h4>
+                    <div class="code-block">
+                        // Partial application example<br>
+                        function multiply(a, b, c) {<br>
+                        &nbsp;&nbsp;return a * b * c;<br>
+                        }<br>
+                        const partialMultiply = multiply.bind(null, 2, 3);<br>
+                        console.log(partialMultiply(4)); <span class="highlight">// Output: 24</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4>Explanation</h4>
+                    <p>In currying, the function is broken down into multiple unary (single argument) functions.</p>
+                </td>
+                <td>|</td>
+                <td>
+                    <h4>Explanation</h4>
+                    <p>In partial application, some of the function's arguments are pre-filled, reducing the arity of
+                        the function.</p>
+                </td>
+            </tr>
+        </table>
+        <h2>Currying Implementation in JavaScript</h2>
+        <h3>Code Explanation</h3>
+
+        <div class="code-block">
+            // Curry implementation:<br>
+            // This function transforms a function into a curried function.<br>
+            function curry(func) {<br>
+            &nbsp;&nbsp;console.log(func);<span class="highlight"> // Output: [Function: sum]</span><br>
+            &nbsp;&nbsp;return function curriedFunc(...args) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.log(args, args.length); <span class="highlight">// Logs the arguments
+                and their length</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;if (args.length >= func.length) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return func(...args); <span class="highlight">// If enough arguments
+                are provided, call the original function</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return function (...next) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return curriedFunc(...args, ...next); <span
+                class="highlight">// Otherwise, return a function that takes the next arguments</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+            &nbsp;&nbsp;}<br>
+            }<br><br>
+            const sum = (a, b, c, d) => a + b + c + d;<br>
+            const totalSum = curry(sum);<br><br>
+            console.log(totalSum(1)(6)(5)(6)); <span class="highlight">// Output: 18</span><br>
+        </div>
+
+        <h3>Explanation of the Code</h3>
+        <p>
+            <strong>Step-by-Step Explanation:</strong><br>
+            1. The <code>curry</code> function takes a function <code>func</code> as an argument.<br>
+            2. It returns a new function <code>curriedFunc</code> that takes any number of arguments
+            (<code>...args</code>).<br>
+            3. Inside <code>curriedFunc</code>, it checks if the number of arguments provided is greater than or
+            equal to the number of arguments expected by the original function <code>func</code>.<br>
+            4. If the number of arguments is sufficient, it calls the original function <code>func</code> with the
+            provided arguments.<br>
+            5. If the number of arguments is not sufficient, it returns a new function that takes the next set of
+            arguments and calls <code>curriedFunc</code> again with all the arguments combined.<br>
+        </p>
+
+    </div>
+    <div class="note-section">
+        <h2>Object in JavaScript</h2>
+        <p>1) Objects are the most important collection of JavaScript.</p>
+        <p>2) Objects are collections of keys and values corresponding to those keys.</p>
+
+        <h3>Print an object</h3>
+        <div class="code-block">
+            const obj = {<br>
+            &nbsp;&nbsp;name: "Thunder",<br>
+            &nbsp;&nbsp;age: "22"<br>
+            };<br><br>
+            console.log(obj); <span class="highlight">// { name: 'Thunder', age: '22' }</span>
+        </div>
+
+        <h3>Update the object</h3>
+        <div class="code-block">
+            obj.name = "Rishabh";<br>
+            console.log(obj); <span class="highlight">// { name: 'Rishabh', age: '22' }</span>
+        </div>
+
+        <h3>Delete the property</h3>
+        <div class="code-block">
+            delete obj.name;<br>
+            console.log(obj); <span class="highlight">// { age: '22' }</span>
+        </div>
+
+        <h3>Shallow Copy vs Deep Copy</h3>
+        <p class="highlight">Shallow Copy: A copy of the object that only copies the object's top-level properties.
+            Changes to nested objects will affect both copies.</p>
+        <p class="highlight">Deep Copy: A copy of the object that recursively copies all nested objects. Changes to the
+            deep copy will not affect the original object.</p>
+
+        <h3>How to clone/create a deep copy of the object</h3>
+        <div class="code-block">
+            let user1 = {<br>
+            &nbsp;&nbsp;name: "Thunder",<br>
+            &nbsp;&nbsp;age: 24<br>
+            };<br><br>
+            <span class="highlight">// Way 1: Using assign method</span><br>
+            const objClone = Object.assign({}, user1);<br>
+            objClone.name = "Piyush";<br><br>
+            <span class="highlight">// Way 2: Using JSON properties</span><br>
+            const objClone2 = JSON.parse(JSON.stringify(user1));<br>
+            objClone2.name = "Alex";<br><br>
+            <span class="highlight">// Way 3: Using destructuring</span><br>
+            const objClone3 = { ...user1 };<br>
+            objClone3.name = "Aron";<br><br>
+            console.log(user1, objClone, objClone2, objClone3); <span class="highlight">// { name: 'Thunder', age: 24 }
+                { name: 'Piyush', age: 24 } { name: 'Alex', age: 24 } { name: 'Aron', age: 24 }</span>
+        </div>
+
+        <h3>Console all the keys and values in the object</h3>
+        <div class="code-block">
+            const obj1 = {<br>
+            &nbsp;&nbsp;name: "Rishabh",<br>
+            &nbsp;&nbsp;age: "22",<br>
+            &nbsp;&nbsp;gender: "male",<br>
+            &nbsp;&nbsp;DOB: "March, 2002"<br>
+            };<br><br>
+            for (key in obj1) {<br>
+            &nbsp;&nbsp;console.log(key); <span class="highlight">// name, age, gender, DOB</span><br>
+            &nbsp;&nbsp;console.log(obj1[key]); <span class="highlight">// Rishabh, 22, male, March, 2002</span><br>
+            }
+        </div>
+
+        <h3>Keys in objects are unique</h3>
+        <div class="code-block">
+            const obj2 = {<br>
+            &nbsp;&nbsp;a: 10,<br>
+            &nbsp;&nbsp;b: "Hello World",<br>
+            &nbsp;&nbsp;a: 20<br>
+            };<br><br>
+            console.log(obj2); <span class="highlight">// { a: 20, b: 'Hello World' }</span>
+        </div>
+
+        <h3>Multiply the numbers by 2</h3>
+        <div class="code-block">
+            const obj3 = {<br>
+            &nbsp;&nbsp;a: 10,<br>
+            &nbsp;&nbsp;b: "hehehe",<br>
+            &nbsp;&nbsp;c: 22<br>
+            };<br><br>
+            for (key in obj3) {<br>
+            &nbsp;&nbsp;if (typeof obj3[key] === "number") {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;obj3[key] = obj3[key] * 2;<br>
+            &nbsp;&nbsp;}<br>
+            }<br><br>
+            console.log(obj3); <span class="highlight">// { a: 20, b: 'hehehe', c: 44 }</span>
+        </div>
+
+        <h3>Output of the code</h3>
+        <div class="code-block">
+            const a = {};<br>
+            const b = { key: "b" };<br>
+            const c = { key: "c" };<br><br>
+            a[b] = 156;<br>
+            a[c] = 456;<br>
+            console.log(a[b]); <span class="highlight">// 456</span>
+        </div>
+        <p class="highlight">Explanation: In JavaScript, object keys are always strings. When we use objects as keys,
+            they are converted to strings. In this case, both b and c are converted to "[object Object]", so the second
+            assignment overwrites the first one.</p>
+
+        <h3>JSON.stringify vs JSON.parse</h3>
+        <div class="code-block">
+            const user = {<br>
+            &nbsp;&nbsp;name: "Rishabh",<br>
+            &nbsp;&nbsp;age: 24<br>
+            };<br><br>
+            const strObj = JSON.stringify(user);<br><br>
+            console.log(user); <span class="highlight">// { name: 'Rishabh', age: 24 }</span><br>
+            console.log(strObj); <span class="highlight">// '{"name":"Rishabh","age":24}'</span><br>
+            console.log(JSON.parse(strObj)); <span class="highlight">// { name: 'Rishabh', age: 24 }</span>
+        </div>
+        <p class="highlight">Why use JSON.stringify: Directly converting an object to a string using toString() returns
+            "[object Object]". Using JSON.stringify converts the object to a JSON string, which is a more useful
+            representation.</p>
+
+        <h3>Output of the code</h3>
+        <div class="code-block">
+            console.log([..."spread"]); <span class="highlight">// ['s', 'p', 'r', 'e', 'a', 'd']</span>
+        </div>
+        <p class="highlight">Explanation: The spread operator (...) is used to spread out the elements of the string
+            "spread" into an array of characters.</p>
+
+        <h3>Output of the code</h3>
+        <div class="code-block">
+            const user7 = {<br>
+            &nbsp;&nbsp;name: "Rishabh",<br>
+            &nbsp;&nbsp;age: 24<br>
+            };<br><br>
+            const admin = {<br>
+            &nbsp;&nbsp;...user7,<br>
+            &nbsp;&nbsp;admin: true<br>
+            };<br><br>
+            console.log(admin); <span class="highlight">// { name: 'Rishabh', age: 24, admin: true }</span>
+        </div>
+        <p class="highlight">Explanation: The spread operator (...) is used to copy all properties from user7 into the
+            new object admin, and then the admin property is added to the new object.</p>
+
+        <h3>Output of the code</h3>
+        <div class="code-block">
+            const shape = {<br>
+            &nbsp;&nbsp;radius: 10,<br>
+            &nbsp;&nbsp;diameter() {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;return this.radius * 2;<br>
+            &nbsp;&nbsp;}<br>
+            };<br><br>
+            console.log(shape.diameter()); <span class="highlight">// 20</span>
+        </div>
+        <p class="highlight">Explanation: The diameter method correctly references the radius property using this, so it
+            returns 20.</p>
+
+        <h3>Destructuring</h3>
+        <p class="highlight">Destructuring: A syntax that allows us to unpack values from arrays or properties from
+            objects into distinct variables.</p>
+        <div class="code-block">
+            const user = { name: "Rishabh", age: 24 };<br>
+            const { name, age } = user;<br>
+            console.log(name); <span class="highlight">// 'Rishabh'</span><br>
+            console.log(age); <span class="highlight">// 24</span>
+        </div>
+
+        <h4>Nested Destructuring</h4>
+        <div class="code-block">
+            const user = {<br>
+            &nbsp;&nbsp;name: "Rishabh",<br>
+            &nbsp;&nbsp;address: {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;city: "Delhi",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;zip: "110001"<br>
+            &nbsp;&nbsp;}<br>
+            };<br><br>
+            const { name, address: { city, zip } } = user;<br>
+            console.log(city); <span class="highlight">// 'Delhi'</span><br>
+            console.log(zip); <span class="highlight">// '110001'</span>
+        </div>
+
+        <h3>Output of the code</h3>
+        <div class="code-block">
+            let e = { greeting: "Hey!" };<br>
+            let d;<br><br>
+            d = e;<br>
+            e.greeting = "Hello";<br>
+            console.log(d.greeting); <span class="highlight">// 'Hello'</span>
+        </div>
+        <p class="highlight">Explanation: Both d and e reference the same object. Changing the greeting property of e
+            also affects d.</p>
+
+        <h3>Output of the code</h3>
+        <div class="code-block">
+            console.log({ a: 1 } == { a: 1 }); <span class="highlight">// false</span><br>
+            console.log({ a: 1 } === { a: 1 }); <span class="highlight">// false</span><br>
+            console.log(JSON.stringify({ a: 1 }) === JSON.stringify({ a: 1 })); <span class="highlight">// true</span>
+        </div>
+        <p class="highlight">Explanation: Object comparisons with == and === compare references, not values, so two
+            different objects with the same properties are not equal. JSON.stringify converts objects to strings, which
+            can be compared by value.</p>
+
+        <h3>Output of the code</h3>
+        <div class="code-block">
+            let person = { name: "Lydia" };<br>
+            const members = [person];<br>
+            let person2 = person;<br>
+            person = null;<br>
+            console.log(members, person2); <span class="highlight">// [ { name: 'Lydia' } ] { name: 'Lydia' }</span>
+        </div>
+        <p class="highlight">Explanation: The members array still references the original object, and person2 is a copy
+            of the reference. Setting person to null doesn't affect these references.</p>
+
+        <h3>Output of the code</h3>
+        <div class="code-block">
+            const value = { number: 10 };<br><br>
+            const multiply = (x = { ...value }) => {<br>
+            &nbsp;&nbsp;console.log((x.number = x.number * 2));<br>
+            }<br><br>
+            multiply(); <span class="highlight">// 20</span><br>
+            multiply(); <span class="highlight">// 20</span><br>
+            multiply(value); <span class="highlight">// 20</span><br>
+            multiply(value); <span class="highlight">// 40</span>
+        </div>
+        <p class="highlight">Explanation: The default parameter creates a new object for each call except when value is
+            explicitly passed. The first two calls don't affect value. The third call affects value, and the fourth call
+            doubles it again.</p>
+
+        <h3>Output of the code</h3>
+        <div class="code-block">
+            function changeAgeAndReference(person) {<br>
+            &nbsp;&nbsp;person.age = 25;<br>
+            &nbsp;&nbsp;person = {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;name: "John",<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;age: 50<br>
+            &nbsp;&nbsp;};<br>
+            &nbsp;&nbsp;return person;<br>
+            }<br><br>
+            const personObj1 = {<br>
+            &nbsp;&nbsp;name: "Alex",<br>
+            &nbsp;&nbsp;age: 40<br>
+            };<br><br>
+            const personObj2 = changeAgeAndReference(personObj1);<br><br>
+            console.log(personObj1); <span class="highlight">// { name: 'Alex', age: 25 }</span><br>
+            console.log(personObj2); <span class="highlight">// { name: 'John', age: 50 }</span>
+        </div>
+        <p class="highlight">Explanation: The function changes the age property of the original object and then
+            reassigns the person parameter to a new object. The original object is modified outside the function, but
+            the new object is not reflected outside.</p>
+    </div>
+    <div class="note-section">
+        <h2>Implicit and Explicit Binding</h2>
+        <h3>Implicit Binding</h3>
+        <div class="code-block">
+            <code>
+                // Implicit Binding: The value of `this` is determined by the object to the left of the dot at call time.<br>
+                const person = {<br>
+                &nbsp;&nbsp;name: 'John',<br>
+                &nbsp;&nbsp;sayHello() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;console.log(`Hello, my name is ${this.name}`);<br>
+                &nbsp;&nbsp;}<br>
+                };<br>
+                person.sayHello(); <span class="highlight">// Hello, my name is John</span>
+            </code>
+        </div>
+
+        <h3>Explicit Binding</h3>
+        <div class="code-block">
+            <code>
+                // Explicit Binding: We can explicitly set `this` using `call()`, `apply()`, or `bind()`.<br>
+                const person = {<br>
+                &nbsp;&nbsp;name: 'John'<br>
+                };<br>
+                function sayHello() {<br>
+                &nbsp;&nbsp;console.log(`Hello, my name is ${this.name}`);<br>
+                }<br>
+                sayHello.call(person); <span class="highlight">// Hello, my name is John</span>
+            </code>
+        </div>
+    </div>
+
+    <div class="note-section">
+        <h2>The `this` Keyword in JavaScript</h2>
+        <p><span class="highlight">// The `this` keyword in JavaScript refers to the object it belongs to. Its value
+                depends on where it is used:</span></p>
+        <ul>
+            <li><span class="highlight">// In a method, `this` refers to the owner object.</span></li>
+            <li><span class="highlight">// Alone, `this` refers to the global object (in browsers, it's
+                    `window`).</span></li>
+            <li><span class="highlight">// In a function, `this` refers to the global object.</span></li>
+            <li><span class="highlight">// In a function, in strict mode, `this` is `undefined`.</span></li>
+            <li><span class="highlight">// In an event, `this` refers to the element that received the event.</span>
+            </li>
+            <li><span class="highlight">// Methods like `call()`, `apply()`, and `bind()` can refer `this` to any
+                    object.</span></li>
+        </ul>
+
+        <h3>Global Scope</h3>
+        <div class="code-block">
+            <code>
+                this.a = 5;<br>
+                console.log(a); <span class="highlight">// 5</span>
+            </code>
+        </div>
+
+        <h3>Function Scope</h3>
+        <div class="code-block">
+            <code>
+                this.b = 5;<br>
+                function getParam1() {<br>
+                &nbsp;&nbsp;console.log(this.b);<br>
+                }<br>
+                getParam1(); <span class="highlight">// 5</span>
+            </code>
+        </div>
+
+        <h3>Arrow Function</h3>
+        <div class="code-block">
+            <code>
+                const getParam2 = () => {<br>
+                &nbsp;&nbsp;console.log(this.b);<br>
+                }<br>
+                getParam2(); <span class="highlight">// 5</span>
+            </code>
+        </div>
+
+        <h3>Object Method</h3>
+        <div class="code-block">
+            <code>
+                let user = {<br>
+                &nbsp;&nbsp;name: "Piyush",<br>
+                &nbsp;&nbsp;age: 24,<br>
+                &nbsp;&nbsp;getDetails() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;console.log(this.name);<br>
+                &nbsp;&nbsp;}<br>
+                }<br>
+                user.getDetails(); <span class="highlight">// Piyush</span>
+            </code>
+        </div>
+
+        <h3>Nested Object Method</h3>
+        <div class="code-block">
+            <code>
+                let user1 = {<br>
+                &nbsp;&nbsp;name: "Piyush",<br>
+                &nbsp;&nbsp;age: 24,<br>
+                &nbsp;&nbsp;contact: {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;newName: "Alex",<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;getDetails() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(this.name + " " + this.newName);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;}<br>
+                }<br>
+                user1.contact.getDetails(); <span class="highlight">// undefined Alex</span>
+            </code>
+        </div>
+
+        <h3>Arrow Function in Object</h3>
+        <div class="code-block">
+            <code>
+                let user2 = {<br>
+                &nbsp;&nbsp;name: "Piyush",<br>
+                &nbsp;&nbsp;age: 24,<br>
+                &nbsp;&nbsp;getDetails: () => {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;console.log(this.name, this);<br>
+                &nbsp;&nbsp;}<br>
+                }<br>
+                user2.getDetails(); <span class="highlight">// undefined, Window object</span>
+            </code>
+        </div>
+
+        <h3>Nested Arrow Function</h3>
+        <div class="code-block">
+            <code>
+                let user3 = {<br>
+                &nbsp;&nbsp;name: "Piyush",<br>
+                &nbsp;&nbsp;age: 24,<br>
+                &nbsp;&nbsp;getDetails: () => {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;const nestedArrow = () => {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return console.log(this.name);<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;nestedArrow();<br>
+                &nbsp;&nbsp;}<br>
+                }<br>
+                user3.getDetails(); <span class="highlight">// undefined</span>
+            </code>
+        </div>
+
+        <h3>Class Method</h3>
+        <div class="code-block">
+            <code>
+                class userClass {<br>
+                &nbsp;&nbsp;constructor(n) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;this.name = n;<br>
+                &nbsp;&nbsp;}<br>
+                &nbsp;&nbsp;getName() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;console.log(this.name);<br>
+                &nbsp;&nbsp;}<br>
+                }<br>
+                const User = new userClass("Alex");<br>
+                console.log(User);<br>
+                User.getName(); <span class="highlight">// Alex</span>
+            </code>
+        </div>
+
+        <h3>More on `this`</h3>
+        <div class="code-block">
+            <code>
+                const user4 = {<br>
+                &nbsp;&nbsp;firstName: "Rishabh!",<br>
+                &nbsp;&nbsp;getName() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;const firstName = "Alex!";<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;return this.firstName<br>
+                &nbsp;&nbsp;}<br>
+                }<br>
+                console.log(user4.getName()); <span class="highlight">// Rishabh!</span>
+            </code>
+        </div>
+
+        <h3>Fixing `this` in an Object</h3>
+        <div class="code-block">
+            <code>
+                const user5 = {<br>
+                &nbsp;&nbsp;name: "Rishabh",<br>
+                &nbsp;&nbsp;ref: this<br>
+                }<br>
+                console.log(user5.ref.name); <span class="highlight">// undefined</span>
+            </code>
+        </div>
+        <p><span class="highlight">// As `this` refers to its parent scope (global scope), we need to nest the function
+                inside the object to fix this.</span></p>
+        <div class="code-block">
+            <code>
+                const user6 = {<br>
+                &nbsp;&nbsp;name: "Rishabh",<br>
+                &nbsp;&nbsp;ref() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;return this;<br>
+                &nbsp;&nbsp;}<br>
+                }<br>
+                console.log(user6.ref().name); <span class="highlight">// Rishabh</span>
+            </code>
+        </div>
+
+        <h3>`this` in `setTimeout`</h3>
+        <div class="code-block">
+            <code>
+                const user7 = {<br>
+                &nbsp;&nbsp;name: "Rishabh",<br>
+                &nbsp;&nbsp;logMessage() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;console.log("Message is for", this.name);<br>
+                &nbsp;&nbsp;}<br>
+                }<br>
+                setTimeout(user7.logMessage, 1000); <span class="highlight">// undefined</span>
+            </code>
+        </div>
+        <p><span class="highlight">// To fix, use an anonymous function to preserve `this`:</span></p>
+        <div class="code-block">
+            <code>
+                setTimeout(function () {<br>
+                &nbsp;&nbsp;user7.logMessage();<br>
+                }, 1000); <span class="highlight">// Message is for Rishabh</span>
+            </code>
+        </div>
+
+        <h3>Important Question</h3>
+        <div class="code-block">
+            <code>
+                var length = 4;<br>
+                function callback() {<br>
+                &nbsp;&nbsp;console.log(this.length); <span class="highlight">// What is logged?</span><br>
+                }<br>
+                const object = {<br>
+                &nbsp;&nbsp;length: 5,<br>
+                &nbsp;&nbsp;method() { <span class="highlight">// arguments = [callback, 2, 3]</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;arguments[0]();<br>
+                &nbsp;&nbsp;}<br>
+                };<br>
+                object.method(callback, 2, 3); <span class="highlight">// 3</span>
+            </code>
+        </div>
+        <p><span class="highlight">// Explanation: The `arguments` object inside `method` refers to the function
+                `callback` and the numbers 2 and 3. When `arguments[0]()` is called, the `this` value inside `callback`
+                is set to `arguments`, which has a `length` property of 3.</span></p>
+    </div>
+</body>
+
+</body>
+
+</html>
